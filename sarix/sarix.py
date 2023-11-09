@@ -339,14 +339,20 @@ class SARIX():
         helper function for doing hmc inference
         '''
         start = time.time()
+        print(f"run_inference(): entered. start={start}")
         kernel = NUTS(self.model)
+        print(f"run_inference(): calling run()")
         mcmc = MCMC(kernel, num_warmup=self.num_warmup, num_samples=self.num_samples, num_chains=self.num_chains,
                     progress_bar=False if "NUMPYRO_SPHINXBUILD" in os.environ else True)
         mcmc.run(rng_key, self.xy, init_params={})
+        print(f"run_inference(): run() done")
         mcmc.print_summary()
-        print('\nMCMC elapsed time:', time.time() - start)
+        time_diff = time.time() - start
+        print('\nMCMC elapsed time:', time_diff)
         self.samples = mcmc.get_samples()
-    
+
+        print(f"run_inference(): done. diff={time_diff}")
+
     
     def make_state_transition_matrix(self, theta):
         batch_shape = theta.shape[:-1]

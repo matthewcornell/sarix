@@ -315,7 +315,7 @@ class SARIX():
 
         # generate predictions
         print(f"__init__(): generating predictions")
-        self.predictions_modeled_scale = self.predict(rng_key_predict)
+        self.predictions_modeled_scale = self.predict(rng_key_predict)  # todo xx NB: broken!
         
         # undo differencing
         print(f"__init__(): undoing differencing")

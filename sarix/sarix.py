@@ -241,18 +241,9 @@ class SARProcess(Distribution):
 
 
 class SARIX():
-    def __init__(self,
-                 xy,
-                 p=1,
-                 d=0,
-                 P=0,
-                 D=0,
-                 season_period=1,
-                 transform='none',
-                 theta_pooling='none',
-                 sigma_pooling='none',
-                 forecast_horizon=1,
-                 num_warmup=1000, num_samples=1000, num_chains=1):
+    def __init__(self, xy, p=1, d=0, P=0, D=0, season_period=1, transform='none', theta_pooling='none',
+                 sigma_pooling='none', forecast_horizon=1, num_warmup=1000, num_samples=1000, num_chains=1):
+        print(f"__init__(): entered")
         self.n_x = xy.shape[-1] - 1
         self.xy = xy.copy()
         self.p = p
@@ -271,6 +262,7 @@ class SARIX():
         
         # set up batch shapes for parameter pooling
         # xy has shape batch_shape + (T, n_x + 1)
+        print(f"__init__(): setting up batch shapes")
         batch_shape = xy.shape[:-2]
         
         if theta_pooling == 'none':
@@ -292,6 +284,7 @@ class SARIX():
             raise ValueError("sigma_pooling must be 'none' or 'shared'")
         
         # do transformation
+        print(f"__init__(): doing transformation")
         self.xy_orig = xy.copy()
         if transform == "sqrt":
             self.xy[self.xy <= 0] = 1.0
@@ -305,33 +298,41 @@ class SARIX():
         
         # do differencing; save xy before differencing for later use when
         # inverting differencing
+        print(f"__init__(): doing differencing")
         transformed_xy = self.xy
         self.xy = diff(self.xy, self.d, self.D, self.season_period, pad_na=False)
         
         # pre-calculate state update matrix
+        print(f"__init__(): pre-calculating state update matrix")
         self.update_X = self.state_update_X(self.xy[..., :self.max_lag, :],
                                             self.xy[..., self.max_lag:, :])
         
         # do inference
+        print(f"__init__(): doing inference")
         rng_key, rng_key_predict = random.split(random.PRNGKey(0))
         self.run_inference(rng_key)
         
         # generate predictions
+        print(f"__init__(): generating predictions")
         self.predictions_modeled_scale = self.predict(rng_key_predict)
         
         # undo differencing
+        print(f"__init__(): undoing differencing")
         self.predictions = inv_diff(transformed_xy,
                                     self.predictions_modeled_scale,
                                     self.d, self.D, self.season_period)
         
         # undo transformation to get predictions on original scale
+        print(f"__init__(): undoing transformation")
         if transform == "log":
             self.predictions = onp.exp(self.predictions)
         elif transform == "fourthrt":
             self.predictions = jnp.maximum(0.0, self.predictions)**4
         elif transform == "sqrt":
             self.predictions = jnp.maximum(0.0, self.predictions)**2
-    
+
+        print(f"__init__(): done")
+
     
     def run_inference(self, rng_key):
         '''

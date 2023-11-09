@@ -309,9 +309,10 @@ class SARIX():
         
         # do inference
         print(f"__init__(): doing inference")
-        rng_key, rng_key_predict = random.split(random.PRNGKey(0))
-        self.run_inference(rng_key)
-        
+        # rng_key, rng_key_predict = random.split(random.PRNGKey(0))
+        # self.run_inference(rng_key)
+        self.run_inference(random.PRNGKey(0))  # todo xx
+
         # generate predictions
         print(f"__init__(): generating predictions")
         self.predictions_modeled_scale = self.predict(rng_key_predict)

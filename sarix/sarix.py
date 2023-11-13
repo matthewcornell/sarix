@@ -310,7 +310,8 @@ class SARIX():
         # do inference
         _rng_key, rng_key_predict = random.split(random.PRNGKey(0))
         rng_key = random.PRNGKey(0)  # todo xx
-        print(f"__init__(): doing inference", _rng_key, type(_rng_key), '.', rng_key, type(rng_key))
+        print(f"__init__(): doing inference", _rng_key, type(_rng_key), '.', rng_key, type(rng_key), '.',
+              is_prng_key.__module__)
         self.run_inference(rng_key)
 
         # generate predictions

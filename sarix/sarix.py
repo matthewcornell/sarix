@@ -308,10 +308,10 @@ class SARIX():
                                             self.xy[..., self.max_lag:, :])
         
         # do inference
-        print(f"__init__(): doing inference")
-        # rng_key, rng_key_predict = random.split(random.PRNGKey(0))
-        # self.run_inference(rng_key)
-        self.run_inference(random.PRNGKey(0))  # todo xx
+        _rng_key, rng_key_predict = random.split(random.PRNGKey(0))
+        rng_key = random.PRNGKey(0)  # todo xx
+        print(f"__init__(): doing inference", _rng_key, type(_rng_key), '.', rng_key, type(rng_key))
+        self.run_inference(rng_key)
 
         # generate predictions
         print(f"__init__(): generating predictions")

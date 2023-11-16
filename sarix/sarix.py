@@ -456,7 +456,14 @@ class SARIX():
             "theta_sd",
             dist.HalfCauchy(jnp.ones(1))
         )
-        theta = jnp.ones(self.theta_batch_shape + (n_theta,))
+
+        # bad?:
+        theta = numpyro.sample(
+            "theta",
+            dist.Normal(loc=jnp.zeros(self.theta_batch_shape + (n_theta,)),
+                        scale=jnp.full(self.theta_batch_shape + (n_theta,),
+                                       theta_sd))
+        )
 
         # assemble state transition matrix A
         A = self.make_state_transition_matrix(theta)

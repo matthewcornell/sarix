@@ -345,7 +345,7 @@ class SARIX():
         kernel = NUTS(self.model)
         mcmc = MCMC(kernel, num_warmup=self.num_warmup, num_samples=self.num_samples, num_chains=self.num_chains,
                     progress_bar=False if "NUMPYRO_SPHINXBUILD" in os.environ else True)
-        print(f"run_inference(): calling run()", kernel, self.num_warmup, self.num_samples, self.num_chains, '.',
+        print(f"run_inference(): calling run() 2", kernel, self.num_warmup, self.num_samples, self.num_chains, '.',
               rng_key, type(rng_key), self.xy)
         mcmc.run(rng_key, xy=self.xy)
         print(f"run_inference(): run() done")

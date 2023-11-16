@@ -347,7 +347,7 @@ class SARIX():
                     progress_bar=False if "NUMPYRO_SPHINXBUILD" in os.environ else True)
         print(f"run_inference(): calling run()", kernel, self.num_warmup, self.num_samples, self.num_chains, '.',
               rng_key, type(rng_key), self.xy)
-        mcmc.run(rng_key, self.xy, init_params={})
+        mcmc.run(rng_key, xy=self.xy)
         print(f"run_inference(): run() done")
         mcmc.print_summary()
         time_diff = time.time() - start

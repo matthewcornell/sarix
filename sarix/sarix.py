@@ -434,7 +434,10 @@ class SARIX():
     
     def model(self, xy):
         # Vector of innovation standard deviations for the n_x + 1 variables
-        sigma = jnp.ones(self.sigma_batch_shape + (self.n_x + 1,))
+        sigma = numpyro.sample(
+            "sigma",
+            dist.HalfCauchy(jnp.ones(self.sigma_batch_shape + (self.n_x + 1,))))
+
 
         # Lower cholesky factor of the covariance matrix has
         # standard deviations on the diagonal

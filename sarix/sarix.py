@@ -434,10 +434,8 @@ class SARIX():
     
     def model(self, xy):
         # Vector of innovation standard deviations for the n_x + 1 variables
-        sigma = numpyro.sample(
-            "sigma",
-            dist.HalfCauchy(jnp.ones(self.sigma_batch_shape + (self.n_x + 1,))))
-        
+        sigma = jnp.ones(self.sigma_batch_shape + (self.n_x + 1,))
+
         # Lower cholesky factor of the covariance matrix has
         # standard deviations on the diagonal
         # The first line below creates (potentially batched) diagonal matrices
@@ -451,17 +449,8 @@ class SARIX():
         
         # state transition matrix parameters
         n_theta = (2 * self.n_x + 1) * (self.p + self.P * (self.p + 1))
-        theta_sd = numpyro.sample(
-            "theta_sd",
-            dist.HalfCauchy(jnp.ones(1))
-        )
-        theta = numpyro.sample(
-            "theta",
-            dist.Normal(loc=jnp.zeros(self.theta_batch_shape + (n_theta,)),
-                        scale=jnp.full(self.theta_batch_shape + (n_theta,),
-                                       theta_sd))
-        )
-        
+        theta = jnp.ones(self.theta_batch_shape + (n_theta,))
+
         # assemble state transition matrix A
         A = self.make_state_transition_matrix(theta)
         

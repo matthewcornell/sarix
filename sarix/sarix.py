@@ -452,6 +452,10 @@ class SARIX():
         
         # state transition matrix parameters
         n_theta = (2 * self.n_x + 1) * (self.p + self.P * (self.p + 1))
+        theta_sd = numpyro.sample(
+            "theta_sd",
+            dist.HalfCauchy(jnp.ones(1))
+        )
         theta = jnp.ones(self.theta_batch_shape + (n_theta,))
 
         # assemble state transition matrix A
